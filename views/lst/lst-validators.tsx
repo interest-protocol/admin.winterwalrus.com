@@ -10,7 +10,8 @@ import {
   normalizeSuiAddress,
   normalizeSuiObjectId,
 } from '@mysten/sui/utils';
-import { FC, useState } from 'react';
+import { FC } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { STAKING_OBJECTS } from '@/constants/objects';
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
@@ -24,9 +25,9 @@ import { LSTAdminsProps } from './lst.types';
 const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
   const client = useSuiClient();
   const blizzardSdk = useBlizzardSdk();
+  const { register, getValues } = useForm();
   const currentAccount = useCurrentAccount();
   const signTransaction = useSignTransaction();
-  const [nodeId, setNodeId] = useState<string>();
   const { data: adminCaps } = useLstAdminLevel(lst);
   const { data: validators } = useLSTValidators(lst);
   const { data: blizzardAclSdk } = useBlizzardAclSdk(lst);
@@ -34,8 +35,6 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
   const adminCap = adminCaps?.find(({ level }) => level === 'admin')?.id;
 
   const removeValidator = async (node: string) => {
-    console.log({ adminCap, currentAccount, lst, blizzardAclSdk });
-
     if (!adminCap || !currentAccount || !lst || !blizzardAclSdk) return;
 
     const { tx, returnValues } = await blizzardAclSdk.signIn({
@@ -52,6 +51,8 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
   };
 
   const addValidator = async () => {
+    const nodeId = getValues('nodeId');
+
     if (
       !lst ||
       !nodeId ||
@@ -95,9 +96,8 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
       <Box gridColumn="span 4" color="onSurface" width="100%">
         <TextField
           label="Node Id"
-          defaultValue={nodeId}
+          {...register('nodeId')}
           nPlaceholder={{ opacity: 0.7 }}
-          onChange={(e) => setNodeId(e.target.value)}
           supportingText="Insert the new node id"
           placeholder={formatAddress(normalizeSuiAddress('0x0'))}
           Suffix={

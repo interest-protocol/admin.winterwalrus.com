@@ -37,12 +37,12 @@ const LST: FC = () => {
       >
         {lst?.symbol} panel
       </Typography>
-      {/* {isSuperAdmin && ( */}
-      <>
-        <Box gridColumn="1/-1" />
-        <LSTAdmins lst={lst?.type} />
-      </>
-      {/* )} */}
+      {isSuperAdmin && (
+        <>
+          <Box gridColumn="1/-1" />
+          <LSTAdmins lst={lst?.type} />
+        </>
+      )}
       <Box gridColumn="1/-1" />
       <LSTMetadata isAdmin={isAdmin} lst={lst} />
       <Box gridColumn="1/-1" />

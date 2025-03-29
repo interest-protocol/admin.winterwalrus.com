@@ -10,7 +10,8 @@ import {
   normalizeSuiAddress,
   normalizeSuiObjectId,
 } from '@mysten/sui/utils';
-import { FC, useState } from 'react';
+import { FC } from 'react';
+import { useForm } from 'react-hook-form';
 
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
 import { useLstAdminLevel } from '@/hooks/use-lst-admin-level';
@@ -21,9 +22,9 @@ import { LSTAdminsProps } from './lst.types';
 
 const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
   const client = useSuiClient();
+  const { register, getValues } = useForm();
   const { data: admins } = useLSTAdmins(lst);
   const currentAccount = useCurrentAccount();
-  const [owner, setOwner] = useState<string>();
   const signTransaction = useSignTransaction();
   const { data: adminCaps } = useLstAdminLevel(lst);
   const { data: blizzardAclSdk } = useBlizzardAclSdk();
@@ -43,6 +44,8 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
   };
 
   const addNewAdmin = async () => {
+    const owner = getValues('owner');
+
     if (
       !owner ||
       !superAdminCap ||
@@ -75,9 +78,8 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
       <Box gridColumn="span 4" color="onSurface" width="100%">
         <TextField
           label="Address"
-          defaultValue={owner}
+          {...register('owner')}
           nPlaceholder={{ opacity: 0.7 }}
-          onChange={(e) => setOwner(e.target.value)}
           supportingText="Insert the new owner address"
           placeholder={formatAddress(normalizeSuiAddress('0x0'))}
           Suffix={
