@@ -118,7 +118,11 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
       >
         Admins
       </Typography>
-      <Box gridColumn="span 4" color="onSurface" width="100%">
+      <Box
+        width="100%"
+        color="onSurface"
+        gridColumn={['span 4', 'span 4', 'span 6', 'span 4']}
+      >
         <TextField
           label="Address"
           {...register('owner')}
@@ -139,7 +143,12 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
         />
       </Box>
       {admins?.map((id) => (
-        <Box gridColumn="span 4" color="onSurface" width="100%" key={id}>
+        <Box
+          key={id}
+          width="100%"
+          color="onSurface"
+          gridColumn={['span 4', 'span 4', 'span 6', 'span 4']}
+        >
           <TextField
             label="Object Id"
             pointerEvents="none"

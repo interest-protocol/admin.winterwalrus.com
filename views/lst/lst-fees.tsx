@@ -96,7 +96,11 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
       >
         Fees
       </Typography>
-      <Box gridColumn="span 4" color="onSurface" width="100%">
+      <Box
+        width="100%"
+        color="onSurface"
+        gridColumn={['span 4', 'span 4', 'span 6', 'span 4']}
+      >
         <TextField
           Prefix="BPS"
           type="number"
@@ -118,7 +122,11 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
           }
         />
       </Box>
-      <Box gridColumn="span 4" color="onSurface" width="100%">
+      <Box
+        width="100%"
+        color="onSurface"
+        gridColumn={['span 4', 'span 4', 'span 6', 'span 4']}
+      >
         <TextField
           Prefix="BPS"
           placeholder="0"
@@ -139,7 +147,11 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
           }
         />
       </Box>
-      <Box gridColumn="span 4" color="onSurface" width="100%">
+      <Box
+        width="100%"
+        color="onSurface"
+        gridColumn={['span 4', 'span 4', 'span 6', 'span 4']}
+      >
         <TextField
           Prefix="BPS"
           placeholder="0"

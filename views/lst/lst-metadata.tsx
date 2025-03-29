@@ -95,7 +95,11 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
       >
         LST Metadata
       </Typography>
-      <Box gridColumn="span 3" color="onSurface" width="100%">
+      <Box
+        width="100%"
+        color="onSurface"
+        gridColumn={['span 4', 'span 2', 'span 6', 'span 3']}
+      >
         <TextField
           label="Symbol"
           placeholder="LST"
@@ -114,7 +118,11 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
           }
         />
       </Box>
-      <Box gridColumn="span 3" color="onSurface" width="100%">
+      <Box
+        width="100%"
+        color="onSurface"
+        gridColumn={['span 4', 'span 2', 'span 6', 'span 3']}
+      >
         <TextField
           label="Name"
           {...register('name')}
@@ -133,7 +141,11 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
           }
         />
       </Box>
-      <Box gridColumn="span 3" color="onSurface" width="100%">
+      <Box
+        width="100%"
+        color="onSurface"
+        gridColumn={['span 4', 'span 2', 'span 6', 'span 3']}
+      >
         <TextField
           placeholder="..."
           label="Description"
@@ -152,7 +164,11 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
           }
         />
       </Box>
-      <Box gridColumn="span 3" color="onSurface" width="100%">
+      <Box
+        width="100%"
+        color="onSurface"
+        gridColumn={['span 4', 'span 2', 'span 6', 'span 3']}
+      >
         <TextField
           label="Icon Url"
           {...register('icon_url')}

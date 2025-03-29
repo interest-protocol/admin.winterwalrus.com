@@ -10,17 +10,17 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <Box
       display="flex"
-      minHeight="100vh"
       bg="lowContainer"
+      minHeight="100vh"
       flexDirection="column"
     >
       <Box py="l">
         <Box variant="container">
           <Box
-            display="flex"
-            justifyContent="space-between"
-            gridColumn="1/-1"
             width="100%"
+            display="flex"
+            gridColumn="1/-1"
+            justifyContent="space-between"
           >
             <Box display="flex" gap="1rem" alignItems="center">
               <LogoSVG maxWidth="2rem" maxHeight="2rem" width="100%" />
@@ -33,12 +33,12 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
         </Box>
       </Box>
       <Box
-        bg="lowestContainer"
-        p="7xl"
         m="l"
+        flex="1"
         mt="NONE"
         borderRadius="s"
-        flex="1"
+        bg="lowestContainer"
+        py={['s', 'm', 'l', '7xl']}
       >
         <Box variant="container">{children}</Box>
       </Box>
