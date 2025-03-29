@@ -47,10 +47,8 @@ const LST: FC = () => {
       <LSTMetadata isAdmin={isAdmin} lst={lst} />
       <Box gridColumn="1/-1" />
       <LSTFees isAdmin={isAdmin} lst={lst} />
-      <>
-        <Box gridColumn="1/-1" />
-        <LSTValidators lst={lst?.type} />
-      </>
+      <Box gridColumn="1/-1" />
+      <LSTValidators lst={lst?.type} />
     </Layout>
   );
 };
