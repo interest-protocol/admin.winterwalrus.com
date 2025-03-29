@@ -25,15 +25,17 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
   const client = useSuiClient();
   const blizzardSdk = useBlizzardSdk();
   const currentAccount = useCurrentAccount();
-  const [nodeId, setNodeId] = useState<string>();
   const signTransaction = useSignTransaction();
+  const [nodeId, setNodeId] = useState<string>();
   const { data: adminCaps } = useLstAdminLevel(lst);
-  const { data: blizzardAclSdk } = useBlizzardAclSdk();
   const { data: validators } = useLSTValidators(lst);
+  const { data: blizzardAclSdk } = useBlizzardAclSdk(lst);
 
   const adminCap = adminCaps?.find(({ level }) => level === 'admin')?.id;
 
   const removeValidator = async (node: string) => {
+    console.log({ adminCap, currentAccount, lst, blizzardAclSdk });
+
     if (!adminCap || !currentAccount || !lst || !blizzardAclSdk) return;
 
     const { tx, returnValues } = await blizzardAclSdk.signIn({
@@ -70,7 +72,13 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
       blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
     });
 
-    signAndExecute({ client, tx, currentAccount, signTransaction });
+    signAndExecute({
+      client,
+      tx,
+      currentAccount,
+      signTransaction,
+      fallback: console.log,
+    });
   };
 
   return (
@@ -123,6 +131,7 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
                 color="onErrorContainer"
                 onClick={() => removeValidator(id)}
                 nHover={{ bg: 'errorContainer', opacity: 0.8 }}
+                nFocus={{ bg: 'errorContainer', opacity: 0.9 }}
               >
                 Delete
               </Button>
