@@ -6,6 +6,7 @@ import {
 } from '@mysten/dapp-kit';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import { STAKING_OBJECTS } from '@/constants/objects';
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
@@ -48,17 +49,39 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
       if (!adminCap || !currentAccount || !lst || !blizzardAclSdk || !value)
         return;
 
-      const { tx, returnValues } = await blizzardAclSdk.signIn({
-        admin: adminCap,
-      });
+      const toastId = toast.loading('Updating metadata...');
 
-      await blizzardSdk[functionName]({
-        value,
-        adminWitness: returnValues,
-        blizzardStaking: STAKING_OBJECTS[lst.type]({ mutable: true }).objectId,
-      });
+      try {
+        const { tx, returnValues } = await blizzardAclSdk.signIn({
+          admin: adminCap,
+        });
 
-      signAndExecute({ client, tx, currentAccount, signTransaction });
+        await blizzardSdk[functionName]({
+          value,
+          adminWitness: returnValues,
+          blizzardStaking: STAKING_OBJECTS[lst.type]({ mutable: true })
+            .objectId,
+        });
+
+        signAndExecute({
+          client,
+          tx,
+          currentAccount,
+          signTransaction,
+          callback: () => {
+            toast.dismiss(toastId);
+            toast.success('Metadata updated successfully!');
+          },
+          fallback: (message) => {
+            toast.dismiss(toastId);
+            toast.error(message || 'Failed to update metadata');
+          },
+        });
+      } catch (e) {
+        toast.error((e as Error).message || 'Failed to update metadata');
+      } finally {
+        toast.dismiss(toastId);
+      }
     };
 
   return (
