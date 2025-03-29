@@ -55,10 +55,7 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
       await blizzardSdk[functionName]({
         value,
         adminWitness: returnValues,
-        blizzardStaking: blizzardSdk.sharedObject(
-          tx,
-          STAKING_OBJECTS[lst.type]({ mutable: true }).objectId
-        ),
+        blizzardStaking: STAKING_OBJECTS[lst.type]({ mutable: true }).objectId,
       });
 
       signAndExecute({ client, tx, currentAccount, signTransaction });
