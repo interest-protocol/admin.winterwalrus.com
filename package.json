@@ -11,7 +11,11 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
+    "@interest-protocol/ui-kit": "0.3.3-beta",
+    "@mysten/dapp-kit": "^0.15.0",
+    "@mysten/sui": "^1.25.0",
     "@stylin.js/elements": "^1.0.2",
+    "@tanstack/react-query": "^5.70.0",
     "next": "14.0.3",
     "prettier": "^3.1.0",
     "react": "^18.2.0",
