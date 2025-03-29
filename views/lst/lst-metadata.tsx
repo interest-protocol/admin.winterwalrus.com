@@ -4,7 +4,6 @@ import {
   useSignTransaction,
   useSuiClient,
 } from '@mysten/dapp-kit';
-import { normalizeStructTag } from '@mysten/sui/utils';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -37,6 +36,14 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
   const setMetadata =
     (kind: 'description' | 'symbol' | 'name' | 'icon_url') => async () => {
       const value = getValues(kind);
+      const functionName = (
+        {
+          name: 'updateName',
+          symbol: 'updateSymbol',
+          icon_url: 'updateIconUrl',
+          description: 'updateDescription',
+        } as const
+      )[kind];
 
       if (!adminCap || !currentAccount || !lst || !blizzardAclSdk || !value)
         return;
@@ -45,20 +52,13 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
         admin: adminCap,
       });
 
-      tx.moveCall({
-        package: blizzardSdk.packages.BLIZZARD.latest,
-        module: blizzardSdk.modules.Protocol,
-        function: `update_${kind}`,
-        arguments: [
-          blizzardSdk.sharedObject(
-            tx,
-            STAKING_OBJECTS[lst.type]({ mutable: true }).objectId
-          ),
-          returnValues,
-          tx.pure.string(value),
-          blizzardSdk.getAllowedVersions(tx),
-        ],
-        typeArguments: [normalizeStructTag(lst.type)],
+      await blizzardSdk[functionName]({
+        value,
+        adminWitness: returnValues,
+        blizzardStaking: blizzardSdk.sharedObject(
+          tx,
+          STAKING_OBJECTS[lst.type]({ mutable: true }).objectId
+        ),
       });
 
       signAndExecute({ client, tx, currentAccount, signTransaction });
