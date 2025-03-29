@@ -12,6 +12,7 @@ import {
 } from '@mysten/sui/utils';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import { STAKING_OBJECTS } from '@/constants/objects';
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
@@ -41,13 +42,34 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
       admin: adminCap,
     });
 
-    await blizzardSdk.removeNode({
-      nodeId: node,
-      adminWitness: returnValues,
-      blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
-    });
+    const toastId = toast.loading('Removing validator...');
 
-    signAndExecute({ client, tx, currentAccount, signTransaction });
+    try {
+      await blizzardSdk.removeNode({
+        nodeId: node,
+        adminWitness: returnValues,
+        blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
+      });
+
+      signAndExecute({
+        tx,
+        client,
+        currentAccount,
+        signTransaction,
+        callback: () => {
+          toast.dismiss(toastId);
+          toast.success('Validator removed successfully!');
+        },
+        fallback: (message) => {
+          toast.dismiss(toastId);
+          toast.error(message || 'Failed to remove validator');
+        },
+      });
+    } catch (e) {
+      toast.error((e as Error).message || 'Failed to remove validator');
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   const addValidator = async () => {
@@ -63,23 +85,38 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
     )
       return;
 
-    const { tx, returnValues } = await blizzardAclSdk.signIn({
-      admin: adminCap,
-    });
+    const toastId = toast.loading('Adding validator...');
 
-    await blizzardSdk.removeNode({
-      nodeId,
-      adminWitness: returnValues,
-      blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
-    });
+    try {
+      const { tx, returnValues } = await blizzardAclSdk.signIn({
+        admin: adminCap,
+      });
 
-    signAndExecute({
-      client,
-      tx,
-      currentAccount,
-      signTransaction,
-      fallback: console.log,
-    });
+      await blizzardSdk.removeNode({
+        nodeId,
+        adminWitness: returnValues,
+        blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
+      });
+
+      signAndExecute({
+        tx,
+        client,
+        currentAccount,
+        signTransaction,
+        callback: () => {
+          toast.dismiss(toastId);
+          toast.success('Validator added successfully!');
+        },
+        fallback: (message) => {
+          toast.dismiss(toastId);
+          toast.error(message || 'Failed to add validator');
+        },
+      });
+    } catch (e) {
+      toast.error((e as Error).message || 'Failed to add validator');
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   return (

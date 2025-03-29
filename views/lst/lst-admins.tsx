@@ -12,6 +12,7 @@ import {
 } from '@mysten/sui/utils';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
 import { useLstAdminLevel } from '@/hooks/use-lst-admin-level';
@@ -34,13 +35,34 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
   const revokeObjectId = async (objectId: string) => {
     if (!superAdminCap || !blizzardAclSdk || !currentAccount) return;
 
-    const { tx } = await blizzardAclSdk.revokeAdmin({
-      lstType: lst,
-      admin: objectId,
-      superAdmin: superAdminCap,
-    });
+    const toastId = toast.loading('Revoking adminCap...');
 
-    signAndExecute({ client, tx, currentAccount, signTransaction });
+    try {
+      const { tx } = await blizzardAclSdk.revokeAdmin({
+        lstType: lst,
+        admin: objectId,
+        superAdmin: superAdminCap,
+      });
+
+      signAndExecute({
+        client,
+        tx,
+        currentAccount,
+        signTransaction,
+        callback: () => {
+          toast.dismiss(toastId);
+          toast.success('AdminCap revoked successfully!');
+        },
+        fallback: (message) => {
+          toast.dismiss(toastId);
+          toast.error(message || 'Failed to revoke adminCap');
+        },
+      });
+    } catch (e) {
+      toast.error((e as Error).message || 'Failed to revoke adminCap');
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   const addNewAdmin = async () => {
@@ -55,13 +77,34 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
     )
       return;
 
-    const { tx } = await blizzardAclSdk.newAdminAndTransfer({
-      lstType: lst,
-      recipient: owner,
-      superAdmin: superAdminCap,
-    });
+    const toastId = toast.loading('Adding admin...');
 
-    signAndExecute({ client, tx, currentAccount, signTransaction });
+    try {
+      const { tx } = await blizzardAclSdk.newAdminAndTransfer({
+        lstType: lst,
+        recipient: owner,
+        superAdmin: superAdminCap,
+      });
+
+      signAndExecute({
+        client,
+        tx,
+        currentAccount,
+        signTransaction,
+        callback: () => {
+          toast.dismiss(toastId);
+          toast.success('Admin added successfully!');
+        },
+        fallback: (message) => {
+          toast.dismiss(toastId);
+          toast.error(message || 'Failed to add admin');
+        },
+      });
+    } catch (e) {
+      toast.error((e as Error).message || 'Failed to add admin');
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   return (
