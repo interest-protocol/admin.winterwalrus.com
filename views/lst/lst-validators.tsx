@@ -51,7 +51,7 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
         blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
       });
 
-      signAndExecute({
+      await signAndExecute({
         tx,
         client,
         currentAccount,
@@ -98,7 +98,7 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
         blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
       });
 
-      signAndExecute({
+      await signAndExecute({
         tx,
         client,
         currentAccount,

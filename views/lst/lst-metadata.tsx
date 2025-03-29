@@ -63,7 +63,7 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
             .objectId,
         });
 
-        signAndExecute({
+        await signAndExecute({
           client,
           tx,
           currentAccount,

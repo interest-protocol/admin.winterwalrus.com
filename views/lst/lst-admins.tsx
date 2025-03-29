@@ -44,7 +44,7 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
         superAdmin: superAdminCap,
       });
 
-      signAndExecute({
+      await signAndExecute({
         client,
         tx,
         currentAccount,
@@ -86,7 +86,7 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
         superAdmin: superAdminCap,
       });
 
-      signAndExecute({
+      await signAndExecute({
         client,
         tx,
         currentAccount,

@@ -64,7 +64,7 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
         typeArguments: [normalizeStructTag(lst.type)],
       });
 
-      signAndExecute({
+      await signAndExecute({
         tx,
         client,
         currentAccount,
