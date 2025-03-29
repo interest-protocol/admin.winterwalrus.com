@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
+    "@interest-protocol/blizzard-sdk": "^1.1.0",
     "@interest-protocol/ui-kit": "0.3.3-beta",
     "@mysten/dapp-kit": "^0.15.0",
     "@mysten/sui": "^1.25.0",
@@ -18,12 +19,18 @@
     "@tanstack/react-query": "^5.70.0",
     "next": "14.0.3",
     "prettier": "^3.1.0",
+    "ramda": "^0.30.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.5.2",
+    "swr": "^2.3.3",
+    "unikey": "^1.1.0"
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.11.0",
+    "@mysten/wallet-standard": "^0.14.0",
     "@types/node": "^20.9.4",
+    "@types/ramda": "^0.30.2",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
