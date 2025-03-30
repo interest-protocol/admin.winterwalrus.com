@@ -10,7 +10,7 @@ export const LSTS = {
     '0f03158a2caec1b656ee929007d08e58d620eeabeacac90ea7657d8b386b00b9::pwal::PWAL'
   ),
   NWAL: normalizeStructTag(
-    'd8b855d48fb4d8ffbb5c4a3ecac27b00f3712ce58626deb5a16a290e0c6edf84::nwal::NWA'
+    'd8b855d48fb4d8ffbb5c4a3ecac27b00f3712ce58626deb5a16a290e0c6edf84::nwal::NWAL'
   ),
 } as const;
 

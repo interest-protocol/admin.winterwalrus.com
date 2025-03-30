@@ -10,7 +10,9 @@ import { useAccountAdminLevel } from '@/hooks/use-account-admin-level';
 
 const Home: FC = () => {
   const { push } = useRouter();
-  const { data } = useAccountAdminLevel();
+  const { data, error } = useAccountAdminLevel();
+
+  console.log({ error });
 
   return (
     <Layout>
