@@ -33,7 +33,10 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
   const superAdminCap = adminCaps?.find(({ level }) => level === 'super')?.id;
 
   const revokeObjectId = async (objectId: string) => {
-    if (!superAdminCap || !blizzardAclSdk || !currentAccount) return;
+    if (!lst) return toast.error('LST not loaded');
+    if (!superAdminCap) return toast.error('No SuperAdminCap found');
+    if (!blizzardAclSdk) return toast.error('Error on load');
+    if (!currentAccount) return toast.error('Wallet not connected');
 
     const toastId = toast.loading('Revoking adminCap...');
 
@@ -68,14 +71,12 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
   const addNewAdmin = async () => {
     const owner = getValues('owner');
 
-    if (
-      !owner ||
-      !superAdminCap ||
-      !blizzardAclSdk ||
-      !currentAccount ||
-      !isValidSuiObjectId(owner)
-    )
-      return;
+    if (!lst) return toast.error('LST not loaded');
+    if (!superAdminCap) return toast.error('No SuperAdminCap found');
+    if (!blizzardAclSdk) return toast.error('Error on load');
+    if (!currentAccount) return toast.error('Wallet not connected');
+    if (!owner || !isValidSuiObjectId(owner))
+      return toast.error('Address is not valid');
 
     const toastId = toast.loading('Adding admin...');
 

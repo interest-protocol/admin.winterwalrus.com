@@ -36,7 +36,10 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
   const adminCap = adminCaps?.find(({ level }) => level === 'admin')?.id;
 
   const removeValidator = async (node: string) => {
-    if (!adminCap || !currentAccount || !lst || !blizzardAclSdk) return;
+    if (!lst) return toast.error('LST not loaded');
+    if (!adminCap) return toast.error('No adminCap found');
+    if (!blizzardAclSdk) return toast.error('Error on load');
+    if (!currentAccount) return toast.error('Wallet not connected');
 
     const { tx, returnValues } = await blizzardAclSdk.signIn({
       admin: adminCap,
@@ -75,15 +78,12 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
   const addValidator = async () => {
     const nodeId = getValues('nodeId');
 
-    if (
-      !lst ||
-      !nodeId ||
-      !adminCap ||
-      !blizzardAclSdk ||
-      !currentAccount ||
-      !isValidSuiObjectId(nodeId)
-    )
-      return;
+    if (!lst) return toast.error('LST not loaded');
+    if (!adminCap) return toast.error('No adminCap found');
+    if (!blizzardAclSdk) return toast.error('Error on load');
+    if (!currentAccount) return toast.error('Wallet not connected');
+    if (!nodeId || !isValidSuiObjectId(nodeId))
+      return toast.error('nodeId invalid');
 
     const toastId = toast.loading('Adding validator...');
 

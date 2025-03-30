@@ -15,7 +15,7 @@ const LST: FC = () => {
   const { data } = useLstAdminLevel(String(query.lst));
 
   const lst = data?.[0].lst;
-  const isAdmin = !!data?.length;
+  const isAdmin = !data?.some(({ level }) => level === 'admin');
   const isSuperAdmin = data?.some(({ level }) => level === 'super');
 
   return (
@@ -43,12 +43,16 @@ const LST: FC = () => {
           <LSTAdmins lst={lst?.type} />
         </>
       )}
-      <Box gridColumn="1/-1" />
-      <LSTMetadata isAdmin={isAdmin} lst={lst} />
-      <Box gridColumn="1/-1" />
-      <LSTFees isAdmin={isAdmin} lst={lst} />
-      <Box gridColumn="1/-1" />
-      <LSTValidators lst={lst?.type} />
+      {isAdmin && (
+        <>
+          <Box gridColumn="1/-1" />
+          <LSTMetadata lst={lst} />
+          <Box gridColumn="1/-1" />
+          <LSTFees lst={lst} />
+          <Box gridColumn="1/-1" />
+          <LSTValidators lst={lst?.type} />
+        </>
+      )}
     </Layout>
   );
 };

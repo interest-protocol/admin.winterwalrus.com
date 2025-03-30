@@ -18,7 +18,7 @@ import { signAndExecute } from '@/utils';
 
 import { LSTMetadataProps } from './lst.types';
 
-const LSTFees: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
+const LSTFees: FC<LSTMetadataProps> = ({ lst }) => {
   const client = useSuiClient();
   const { data } = useFees(lst?.type);
   const blizzardSdk = useBlizzardSdk();
@@ -39,8 +39,11 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
   const setFee = (kind: 'mint' | 'burn' | 'transmute') => async () => {
     const value = getValues(kind);
 
-    if (!adminCap || !currentAccount || !lst || !blizzardAclSdk || !value)
-      return;
+    if (!lst) return toast.error('LST not loaded');
+    if (!adminCap) return toast.error('No adminCap found');
+    if (!blizzardAclSdk) return toast.error('Error on load');
+    if (!currentAccount) return toast.error('Wallet not connected');
+    if (!value || isNaN(value)) return toast.error('Insert a valid input');
 
     const toastId = toast.loading('Setting fee...');
     try {
@@ -114,7 +117,6 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
               mr="-0.5rem"
               variant="filled"
               borderRadius="m"
-              disabled={!isAdmin}
               onClick={setFee('mint')}
             >
               Save
@@ -139,7 +141,6 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
               mr="-0.5rem"
               variant="filled"
               borderRadius="m"
-              disabled={!isAdmin}
               onClick={setFee('burn')}
             >
               Save
@@ -164,7 +165,6 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
               mr="-0.5rem"
               variant="filled"
               borderRadius="m"
-              disabled={!isAdmin}
               onClick={setFee('transmute')}
             >
               Save

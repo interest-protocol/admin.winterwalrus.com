@@ -1,13 +1,17 @@
+import { BlizzardAclSDK } from '@interest-protocol/blizzard-sdk';
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit';
 import useSWR from 'swr';
 
 import { ADMIN_LEVEL, SUPER_ADMIN_LEVEL } from '@/constants';
+import { ACL_OBJECTS } from '@/constants/objects';
 import { CoinMetadata } from '@/interface';
+
+type Level = 'admin' | 'super';
 
 interface AdminLevel {
   id: string;
   lst: CoinMetadata;
-  level: 'admin' | 'super' | null;
+  level: Level | null;
 }
 
 export const useAccountAdminLevel = () => {
@@ -22,8 +26,11 @@ export const useAccountAdminLevel = () => {
       const objects = await client.getOwnedObjects({
         owner: currentAccount.address,
         filter: {
-          Package:
-            '0x29ba7f7bc53e776f27a6d1289555ded2f407b4b1a799224f06b26addbcd1c33d',
+          MoveModule: {
+            module: 'blizzard_acl',
+            package:
+              '0x29ba7f7bc53e776f27a6d1289555ded2f407b4b1a799224f06b26addbcd1c33d',
+          },
         },
         options: { showType: true },
       });
@@ -42,7 +49,23 @@ export const useAccountAdminLevel = () => {
           : []
       );
 
-      const lstsTypes = lstsLevel.map(({ lst }) => lst);
+      const validityLstsLevel = await Promise.all(
+        lstsLevel.map(async ({ lst, level, id }) => {
+          const aclSdk = new BlizzardAclSDK({
+            acl: ACL_OBJECTS[lst]({ mutable: true }).objectId,
+          });
+
+          if (level === 'super') return true;
+
+          return aclSdk.isAdmin({ admin: id, lstType: lst });
+        })
+      );
+
+      const finalLstsLevel = lstsLevel.filter(
+        (_, index) => validityLstsLevel[index]
+      );
+
+      const lstsTypes = finalLstsLevel.map(({ lst }) => lst);
 
       const lstsMetadata = await fetch(
         `https://api.interestlabs.io/v1/coins/mainnet/metadatas?coinTypes=${lstsTypes}`
@@ -55,7 +78,7 @@ export const useAccountAdminLevel = () => {
           )
         );
 
-      return lstsLevel.map(
+      return finalLstsLevel.map(
         ({ lst, ...rest }) =>
           ({
             ...rest,

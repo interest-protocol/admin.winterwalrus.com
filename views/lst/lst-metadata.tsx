@@ -16,7 +16,7 @@ import { signAndExecute } from '@/utils';
 
 import { LSTMetadataProps } from './lst.types';
 
-const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
+const LSTMetadata: FC<LSTMetadataProps> = ({ lst }) => {
   const client = useSuiClient();
   const blizzardSdk = useBlizzardSdk();
   const currentAccount = useCurrentAccount();
@@ -46,8 +46,11 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
         } as const
       )[kind];
 
-      if (!adminCap || !currentAccount || !lst || !blizzardAclSdk || !value)
-        return;
+      if (!lst) return toast.error('LST not loaded');
+      if (!adminCap) return toast.error('No adminCap found');
+      if (!blizzardAclSdk) return toast.error('Error on load');
+      if (!currentAccount) return toast.error('Wallet not connected');
+      if (!value) return toast.error('Insert a valid input');
 
       const toastId = toast.loading('Updating metadata...');
 
@@ -110,7 +113,6 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
               mr="-0.5rem"
               variant="filled"
               borderRadius="m"
-              disabled={!isAdmin}
               onClick={setMetadata('symbol')}
             >
               Save
@@ -133,7 +135,6 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
               mr="-0.5rem"
               variant="filled"
               borderRadius="m"
-              disabled={!isAdmin}
               onClick={setMetadata('symbol')}
             >
               Save
@@ -156,7 +157,6 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
               mr="-0.5rem"
               variant="filled"
               borderRadius="m"
-              disabled={!isAdmin}
               onClick={setMetadata('description')}
             >
               Save
@@ -179,7 +179,6 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst, isAdmin }) => {
               mr="-0.5rem"
               variant="filled"
               borderRadius="m"
-              disabled={!isAdmin}
               onClick={setMetadata('icon_url')}
             >
               Save
