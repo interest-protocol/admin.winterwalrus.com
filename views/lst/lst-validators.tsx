@@ -30,8 +30,8 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
   const currentAccount = useCurrentAccount();
   const signTransaction = useSignTransaction();
   const { data: adminCaps } = useLstAdminLevel(lst);
-  const { data: validators } = useLSTValidators(lst);
   const { data: blizzardAclSdk } = useBlizzardAclSdk(lst);
+  const { data: validators, mutate } = useLSTValidators(lst);
 
   const adminCap = adminCaps?.find(({ level }) => level === 'admin')?.id;
 
@@ -60,6 +60,7 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
         currentAccount,
         signTransaction,
         callback: () => {
+          mutate();
           toast.dismiss(toastId);
           toast.success('Validator removed successfully!');
         },
@@ -104,6 +105,7 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
         currentAccount,
         signTransaction,
         callback: () => {
+          mutate();
           toast.dismiss(toastId);
           toast.success('Validator added successfully!');
         },

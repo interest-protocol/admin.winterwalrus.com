@@ -20,9 +20,9 @@ import { LSTMetadataProps } from './lst.types';
 
 const LSTFees: FC<LSTMetadataProps> = ({ lst }) => {
   const client = useSuiClient();
-  const { data } = useFees(lst?.type);
   const blizzardSdk = useBlizzardSdk();
   const currentAccount = useCurrentAccount();
+  const { data, mutate } = useFees(lst?.type);
   const signTransaction = useSignTransaction();
   const { data: adminCaps } = useLstAdminLevel(lst?.type);
   const { data: blizzardAclSdk } = useBlizzardAclSdk(lst?.type);
@@ -73,6 +73,7 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst }) => {
         currentAccount,
         signTransaction,
         callback: () => {
+          mutate();
           toast.dismiss(toastId);
           toast.success('Fee set successfully!');
         },
