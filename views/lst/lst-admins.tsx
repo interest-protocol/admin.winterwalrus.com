@@ -96,11 +96,11 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
         currentAccount,
         signTransaction,
         callback: () => {
+          mutate();
           toast.dismiss(toastId);
           toast.success('Admin added successfully!');
         },
         fallback: (message) => {
-          mutate();
           toast.dismiss(toastId);
           toast.error(message || 'Failed to add admin');
         },
