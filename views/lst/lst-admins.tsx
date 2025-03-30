@@ -28,7 +28,7 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
   const currentAccount = useCurrentAccount();
   const signTransaction = useSignTransaction();
   const { data: adminCaps } = useLstAdminLevel(lst);
-  const { data: blizzardAclSdk } = useBlizzardAclSdk();
+  const { data: blizzardAclSdk } = useBlizzardAclSdk(lst);
 
   const superAdminCap = adminCaps?.find(({ level }) => level === 'super')?.id;
 

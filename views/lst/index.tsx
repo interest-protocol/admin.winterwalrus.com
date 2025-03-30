@@ -14,7 +14,7 @@ const LST: FC = () => {
   const { query, push } = useRouter();
   const { data } = useLstAdminLevel(String(query.lst));
 
-  const lst = data?.[0].lst;
+  const lst = data?.[0]?.lst;
   const isAdmin = data?.some(({ level }) => level === 'admin');
   const isSuperAdmin = data?.some(({ level }) => level === 'super');
 

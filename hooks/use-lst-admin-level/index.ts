@@ -10,7 +10,7 @@ export const useLstAdminLevel = (lst?: string) => {
   const { data: blizzardAclSdk } = useBlizzardAclSdk(lst);
 
   return useSWR(
-    [useLstAdminLevel.name, currentAccount?.address, lst, data],
+    [useLstAdminLevel.name, currentAccount?.address, lst, data, blizzardAclSdk],
     async () => {
       if (!currentAccount || !lst || !data || !blizzardAclSdk) return null;
 
