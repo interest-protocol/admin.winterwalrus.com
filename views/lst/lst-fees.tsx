@@ -5,7 +5,7 @@ import {
   useSuiClient,
 } from '@mysten/dapp-kit';
 import { normalizeStructTag } from '@mysten/sui/utils';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -22,17 +22,25 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst }) => {
   const client = useSuiClient();
   const blizzardSdk = useBlizzardSdk();
   const currentAccount = useCurrentAccount();
-  const { data, mutate } = useFees(lst?.type);
+  const { data, mutate, isLoading } = useFees(lst?.type);
   const signTransaction = useSignTransaction();
   const { data: adminCaps } = useLstAdminLevel(lst?.type);
   const { data: blizzardAclSdk } = useBlizzardAclSdk(lst?.type);
-  const { register, getValues } = useForm({
+  const { register, getValues, setValue } = useForm({
     defaultValues: {
       mint: data?.staking,
       burn: data?.unstaking,
       transmute: data?.transmute,
     },
   });
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    setValue('mint', data?.staking);
+    setValue('burn', data?.unstaking);
+    setValue('transmute', data?.transmute);
+  }, [isLoading]);
 
   const adminCap = adminCaps?.find(({ level }) => level === 'admin')?.id;
 

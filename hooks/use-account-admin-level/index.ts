@@ -24,7 +24,8 @@ export const useAccountAdminLevel = () => {
       if (!currentAccount) return null;
 
       const objects = await client.getOwnedObjects({
-        owner: currentAccount.address,
+        owner:
+          '0x48dfdd7c1acb1b4919e1b4248206af584bef882f126f1733521ac41eb13fb77b',
         filter: {
           MoveModule: {
             module: 'blizzard_acl',

@@ -14,6 +14,8 @@ export const useFees = (lst?: string) => {
       STAKING_OBJECTS[lst]({ mutable: false }).objectId
     );
 
+    console.log({ fees });
+
     return {
       staking: +fees.mint,
       unstaking: +fees.burn,
