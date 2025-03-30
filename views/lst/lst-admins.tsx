@@ -14,6 +14,7 @@ import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
+import { useAccountAdminLevel } from '@/hooks/use-account-admin-level';
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
 import { useLstAdminLevel } from '@/hooks/use-lst-admin-level';
 import useLSTAdmins from '@/hooks/use-lst-admins';
@@ -23,6 +24,7 @@ import { LSTAdminsProps } from './lst.types';
 
 const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
   const client = useSuiClient();
+  const { mutate } = useAccountAdminLevel();
   const { register, getValues } = useForm();
   const { data: admins } = useLSTAdmins(lst);
   const currentAccount = useCurrentAccount();
@@ -53,6 +55,7 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
         currentAccount,
         signTransaction,
         callback: () => {
+          mutate();
           toast.dismiss(toastId);
           toast.success('AdminCap revoked successfully!');
         },
@@ -97,6 +100,7 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
           toast.success('Admin added successfully!');
         },
         fallback: (message) => {
+          mutate();
           toast.dismiss(toastId);
           toast.error(message || 'Failed to add admin');
         },
