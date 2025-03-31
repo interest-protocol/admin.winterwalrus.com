@@ -46,13 +46,13 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
     if (!blizzardAclSdk) return toast.error('Error on load');
     if (!currentAccount) return toast.error('Wallet not connected');
 
-    const { tx, returnValues } = await blizzardAclSdk.signIn({
-      admin: adminCap,
-    });
-
     const toastId = toast.loading('Removing validator...');
 
     try {
+      const { tx, returnValues } = await blizzardAclSdk.signIn({
+        admin: adminCap,
+      });
+
       await blizzardSdk.removeNode({
         nodeId: node,
         adminWitness: returnValues,
@@ -98,7 +98,7 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
         admin: adminCap,
       });
 
-      await blizzardSdk.removeNode({
+      await blizzardSdk.addNode({
         nodeId,
         adminWitness: returnValues,
         blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
