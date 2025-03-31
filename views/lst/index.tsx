@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { useRouter } from 'next/router';
+import { values } from 'ramda';
 import { FC } from 'react';
 
 import { Layout } from '@/components';
@@ -14,9 +15,9 @@ const LST: FC = () => {
   const { query, push } = useRouter();
   const { data } = useLstAdminLevel(String(query.lst));
 
-  const lst = data?.[0]?.lst;
-  const isAdmin = data?.some(({ level }) => level === 'admin');
-  const isSuperAdmin = data?.some(({ level }) => level === 'super');
+  const lst = data?.lst;
+  const isAdmin = values(data?.access ?? {}).includes('admin');
+  const isSuperAdmin = values(data?.access ?? {}).includes('super');
 
   return (
     <Layout>

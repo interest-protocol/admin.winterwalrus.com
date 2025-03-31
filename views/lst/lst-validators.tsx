@@ -10,6 +10,7 @@ import {
   normalizeSuiAddress,
   normalizeSuiObjectId,
 } from '@mysten/sui/utils';
+import { toPairs } from 'ramda';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -17,8 +18,8 @@ import toast from 'react-hot-toast';
 import { STAKING_OBJECTS } from '@/constants/objects';
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
 import useBlizzardSdk from '@/hooks/use-blizzard-sdk';
+import { useBlizzardStaking } from '@/hooks/use-blizzard-staking';
 import { useLstAdminLevel } from '@/hooks/use-lst-admin-level';
-import useLSTValidators from '@/hooks/use-lst-validators';
 import { signAndExecute } from '@/utils';
 
 import { LSTAdminsProps } from './lst.types';
@@ -31,9 +32,11 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
   const signTransaction = useSignTransaction();
   const { data: adminCaps } = useLstAdminLevel(lst);
   const { data: blizzardAclSdk } = useBlizzardAclSdk(lst);
-  const { data: validators, mutate } = useLSTValidators(lst);
+  const { data, mutate } = useBlizzardStaking(lst);
 
-  const adminCap = adminCaps?.find(({ level }) => level === 'admin')?.id;
+  const adminCap = toPairs(adminCaps?.access ?? {}).find(
+    ([, value]) => value === 'admin'
+  )?.[0];
 
   const removeValidator = async (node: string) => {
     if (!lst) return toast.error('LST not loaded');
@@ -156,7 +159,7 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
           }
         />
       </Box>
-      {validators?.map((id) => (
+      {data?.allowedNodes?.map((id) => (
         <Box
           key={id}
           width="100%"

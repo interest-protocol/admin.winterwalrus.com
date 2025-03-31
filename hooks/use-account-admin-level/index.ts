@@ -1,5 +1,6 @@
 import { BlizzardAclSDK } from '@interest-protocol/blizzard-sdk';
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit';
+import { toPairs, values } from 'ramda';
 import useSWR from 'swr';
 
 import { ADMIN_LEVEL, SUPER_ADMIN_LEVEL } from '@/constants';
@@ -8,10 +9,13 @@ import { CoinMetadata } from '@/interface';
 
 type Level = 'admin' | 'super';
 
-interface AdminLevel {
-  id: string;
+interface RawAdminLevel {
+  lst: string;
+  access: Record<string, Level>;
+}
+
+interface AdminLevel extends Omit<RawAdminLevel, 'lst'> {
   lst: CoinMetadata;
-  level: Level | null;
 }
 
 export const useAccountAdminLevel = () => {
@@ -35,35 +39,61 @@ export const useAccountAdminLevel = () => {
         options: { showType: true },
       });
 
-      const lstsLevel = objects.data.flatMap((data) =>
-        data?.data?.type
-          ? {
-              id: data.data.objectId,
-              lst: data.data.type.split('<')[1].slice(0, -1),
-              level: data.data.type.startsWith(SUPER_ADMIN_LEVEL)
-                ? 'super'
-                : data.data.type.startsWith(ADMIN_LEVEL)
-                  ? 'admin'
-                  : null,
-            }
-          : []
+      const lstsLevelMap = objects.data.reduce(
+        (acc, data) => {
+          if (!data?.data?.type) return acc;
+
+          const level: Level | null = data.data.type.startsWith(
+            SUPER_ADMIN_LEVEL
+          )
+            ? 'super'
+            : data.data.type.startsWith(ADMIN_LEVEL)
+              ? 'admin'
+              : null;
+
+          if (!level) return acc;
+
+          const lst = data.data.type.split('<')[1].slice(0, -1);
+          const id = data.data.objectId;
+
+          return {
+            ...acc,
+            [lst]: {
+              lst,
+              access: {
+                ...acc?.[lst]?.access,
+                [id]: level,
+              },
+            },
+          };
+        },
+        {} as Record<string, RawAdminLevel>
       );
 
-      const validityLstsLevel = await Promise.all(
-        lstsLevel.map(async ({ lst, level, id }) => {
-          const aclSdk = new BlizzardAclSDK({
-            acl: ACL_OBJECTS[lst]({ mutable: true }).objectId,
-          });
+      const lstsLevel = values(lstsLevelMap);
 
-          if (level === 'super') return true;
+      const validityLstsLevel: Record<string, ReadonlyArray<boolean>> = {};
 
-          return aclSdk.isAdmin({ admin: id, lstType: lst });
-        })
-      );
+      for (const lstLevel of lstsLevel) {
+        validityLstsLevel[lstLevel.lst] = await Promise.all(
+          toPairs(lstLevel.access).map(async ([id, level]) => {
+            const aclSdk = new BlizzardAclSDK({
+              acl: ACL_OBJECTS[lstLevel.lst]({ mutable: true }).objectId,
+            });
 
-      const finalLstsLevel = lstsLevel.filter(
-        (_, index) => validityLstsLevel[index]
-      );
+            if (level === 'super') return true;
+
+            return aclSdk.isAdmin({ admin: id, lstType: lstLevel.lst });
+          })
+        );
+      }
+
+      const finalLstsLevel = lstsLevel.map(({ lst, access }) => ({
+        lst,
+        access: toPairs(access)
+          .filter((_, index) => validityLstsLevel[lst][index])
+          .reduce((acc, [id, level]) => ({ ...acc, [id]: level }), {}),
+      }));
 
       const lstsTypes = finalLstsLevel.map(({ lst }) => lst);
 

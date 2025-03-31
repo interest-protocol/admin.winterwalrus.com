@@ -10,6 +10,7 @@ import {
   normalizeSuiAddress,
   normalizeSuiObjectId,
 } from '@mysten/sui/utils';
+import { toPairs } from 'ramda';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -29,10 +30,12 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
   const { data: admins } = useLSTAdmins(lst);
   const currentAccount = useCurrentAccount();
   const signTransaction = useSignTransaction();
-  const { data: adminCaps } = useLstAdminLevel(lst);
+  const { data: adminLevels } = useLstAdminLevel(lst);
   const { data: blizzardAclSdk } = useBlizzardAclSdk(lst);
 
-  const superAdminCap = adminCaps?.find(({ level }) => level === 'super')?.id;
+  const superAdminCap = toPairs(adminLevels?.access ?? {}).find(
+    ([, value]) => value === 'super'
+  )?.[0];
 
   const revokeObjectId = async (objectId: string) => {
     if (!lst) return toast.error('LST not loaded');

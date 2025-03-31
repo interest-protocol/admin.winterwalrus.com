@@ -5,6 +5,7 @@ import {
   useSuiClient,
 } from '@mysten/dapp-kit';
 import { normalizeStructTag } from '@mysten/sui/utils';
+import { toPairs } from 'ramda';
 import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -12,7 +13,7 @@ import toast from 'react-hot-toast';
 import { STAKING_OBJECTS } from '@/constants/objects';
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
 import useBlizzardSdk from '@/hooks/use-blizzard-sdk';
-import { useFees } from '@/hooks/use-fees';
+import { useBlizzardStaking } from '@/hooks/use-blizzard-staking';
 import { useLstAdminLevel } from '@/hooks/use-lst-admin-level';
 import { signAndExecute } from '@/utils';
 
@@ -22,27 +23,29 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst }) => {
   const client = useSuiClient();
   const blizzardSdk = useBlizzardSdk();
   const currentAccount = useCurrentAccount();
-  const { data, mutate, isLoading } = useFees(lst?.type);
   const signTransaction = useSignTransaction();
   const { data: adminCaps } = useLstAdminLevel(lst?.type);
   const { data: blizzardAclSdk } = useBlizzardAclSdk(lst?.type);
+  const { data, mutate, isLoading } = useBlizzardStaking(lst?.type);
   const { register, getValues, setValue } = useForm({
     defaultValues: {
-      mint: data?.staking,
-      burn: data?.unstaking,
-      transmute: data?.transmute,
+      mint: Number(data?.feeConfig.mint ?? 0),
+      burn: Number(data?.feeConfig.burn ?? 0),
+      transmute: Number(data?.feeConfig.transmute ?? 0),
     },
   });
 
   useEffect(() => {
-    if (isLoading) return;
+    if (isLoading || !data) return;
 
-    setValue('mint', data?.staking);
-    setValue('burn', data?.unstaking);
-    setValue('transmute', data?.transmute);
+    setValue('mint', Number(data.feeConfig.mint));
+    setValue('burn', Number(data.feeConfig.burn));
+    setValue('transmute', Number(data.feeConfig.transmute));
   }, [isLoading]);
 
-  const adminCap = adminCaps?.find(({ level }) => level === 'admin')?.id;
+  const adminCap = toPairs(adminCaps?.access ?? {}).find(
+    ([, value]) => value === 'admin'
+  )?.[0];
 
   const setFee = (kind: 'mint' | 'burn' | 'transmute') => async () => {
     const value = getValues(kind);

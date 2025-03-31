@@ -14,7 +14,7 @@ export const useLstAdminLevel = (lst?: string) => {
     async () => {
       if (!currentAccount || !lst || !data || !blizzardAclSdk) return null;
 
-      return data.filter(({ lst: { type } }) => type === lst);
+      return data.find(({ lst: { type } }) => type === lst);
     }
   );
 };

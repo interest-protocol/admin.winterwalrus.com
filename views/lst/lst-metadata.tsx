@@ -4,6 +4,7 @@ import {
   useSignTransaction,
   useSuiClient,
 } from '@mysten/dapp-kit';
+import { toPairs } from 'ramda';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -32,7 +33,9 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst }) => {
     },
   });
 
-  const adminCap = adminCaps?.find(({ level }) => level === 'admin')?.id;
+  const adminCap = toPairs(adminCaps?.access ?? {}).find(
+    ([, value]) => value === 'admin'
+  )?.[0];
 
   const setMetadata =
     (kind: 'description' | 'symbol' | 'name' | 'icon_url') => async () => {

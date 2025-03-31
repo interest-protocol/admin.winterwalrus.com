@@ -2,6 +2,7 @@ import { Box, Typography } from '@interest-protocol/ui-kit';
 import { formatAddress } from '@mysten/sui/utils';
 import { Img } from '@stylin.js/elements';
 import { useRouter } from 'next/router';
+import { values } from 'ramda';
 import { FC } from 'react';
 import unikey from 'unikey';
 
@@ -23,7 +24,7 @@ const Home: FC = () => {
       >
         Select LST
       </Typography>
-      {data?.map(({ lst, level }) => (
+      {data?.map(({ lst, access }) => (
         <Box
           p="xl"
           gap="xl"
@@ -50,7 +51,7 @@ const Home: FC = () => {
               {formatAddress(lst.type!)}
             </Typography>
             <Typography variant="label" size="medium">
-              {level}
+              {Array.from(new Set(values(access))).join(' & ')}
             </Typography>
           </Box>
         </Box>
@@ -60,3 +61,8 @@ const Home: FC = () => {
 };
 
 export default Home;
+// just chane execute on ur UI to dry run
+
+// bread super admin -> 0x0de83d626d1ed8ab2e337a8cb306c1136858cfed0b0ca41b4cbbdc91224f89da
+
+// bread acc -> 0xd94414fabb3930998c99696331b49a4fe60372abb0618a22714a0123bfc876b2
