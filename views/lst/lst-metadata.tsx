@@ -85,9 +85,8 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst }) => {
           },
         });
       } catch (e) {
-        toast.error((e as Error).message || 'Failed to update metadata');
-      } finally {
         toast.dismiss(toastId);
+        toast.error((e as Error).message || 'Failed to update metadata');
       }
     };
 

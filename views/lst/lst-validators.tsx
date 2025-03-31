@@ -66,7 +66,6 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
         currentAccount,
         signTransaction,
         callback: () => {
-          mutate();
           toast.dismiss(toastId);
           toast.success('Validator removed successfully!');
         },
@@ -76,9 +75,10 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
         },
       });
     } catch (e) {
+      toast.dismiss(toastId);
       toast.error((e as Error).message || 'Failed to remove validator');
     } finally {
-      toast.dismiss(toastId);
+      mutate();
     }
   };
 

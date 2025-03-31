@@ -84,7 +84,6 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst }) => {
         currentAccount,
         signTransaction,
         callback: () => {
-          mutate();
           toast.dismiss(toastId);
           toast.success('Fee set successfully!');
         },
@@ -94,9 +93,10 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst }) => {
         },
       });
     } catch (e) {
+      toast.dismiss(toastId);
       toast.error((e as Error).message || 'Failed to set the fee');
     } finally {
-      toast.dismiss(toastId);
+      mutate();
     }
   };
 

@@ -58,7 +58,6 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
         currentAccount,
         signTransaction,
         callback: () => {
-          mutate();
           toast.dismiss(toastId);
           toast.success('AdminCap revoked successfully!');
         },
@@ -68,9 +67,10 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
         },
       });
     } catch (e) {
+      toast.dismiss(toastId);
       toast.error((e as Error).message || 'Failed to revoke adminCap');
     } finally {
-      toast.dismiss(toastId);
+      mutate();
     }
   };
 
@@ -99,7 +99,6 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
         currentAccount,
         signTransaction,
         callback: () => {
-          mutate();
           toast.dismiss(toastId);
           toast.success('Admin added successfully!');
         },
@@ -109,9 +108,10 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
         },
       });
     } catch (e) {
+      toast.dismiss(toastId);
       toast.error((e as Error).message || 'Failed to add admin');
     } finally {
-      toast.dismiss(toastId);
+      mutate();
     }
   };
 

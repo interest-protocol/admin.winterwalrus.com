@@ -55,7 +55,6 @@ const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
         currentAccount,
         signTransaction,
         callback: () => {
-          mutate();
           toast.dismiss(toastId);
           toast.success('Fees claimed successfully!');
         },
@@ -65,9 +64,10 @@ const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
         },
       });
     } catch (e) {
+      toast.dismiss(toastId);
       toast.error((e as Error).message || 'Failed to claim fees');
     } finally {
-      toast.dismiss(toastId);
+      mutate();
     }
   };
 
