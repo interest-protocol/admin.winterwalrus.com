@@ -63,6 +63,7 @@ const LSTMetadata: FC<LSTMetadataProps> = ({ lst }) => {
         });
 
         await blizzardSdk[functionName]({
+          tx,
           value,
           adminWitness: returnValues,
           blizzardStaking: STAKING_OBJECTS[lst.type]({ mutable: true })

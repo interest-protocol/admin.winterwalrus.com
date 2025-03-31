@@ -53,8 +53,8 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
       });
 
       await signAndExecute({
-        client,
         tx,
+        client,
         currentAccount,
         signTransaction,
         callback: () => {
@@ -94,8 +94,8 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
       });
 
       await signAndExecute({
-        client,
         tx,
+        client,
         currentAccount,
         signTransaction,
         callback: () => {

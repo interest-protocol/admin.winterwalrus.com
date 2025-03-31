@@ -43,6 +43,7 @@ const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
       const { tx, returnValues } = await blizzardAclSdk.signIn({
         admin: adminCap,
       });
+
       blizzardSdk.claimFees({
         tx,
         adminWitness: returnValues,

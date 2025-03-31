@@ -54,6 +54,7 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
       });
 
       await blizzardSdk.removeNode({
+        tx,
         nodeId: node,
         adminWitness: returnValues,
         blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
@@ -99,6 +100,7 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
       });
 
       await blizzardSdk.addNode({
+        tx,
         nodeId,
         adminWitness: returnValues,
         blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
