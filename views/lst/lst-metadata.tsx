@@ -13,7 +13,7 @@ import { STAKING_OBJECTS } from '@/constants/objects';
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
 import useBlizzardSdk from '@/hooks/use-blizzard-sdk';
 import { useLstAdminLevel } from '@/hooks/use-lst-admin-level';
-import { signAndExecute } from '@/utils';
+import { signAndExecute } from '@/utils/tx';
 
 import { LSTMetadataProps } from './lst.types';
 

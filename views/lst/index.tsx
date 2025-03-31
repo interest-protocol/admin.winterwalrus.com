@@ -9,6 +9,7 @@ import { useLstAdminLevel } from '@/hooks/use-lst-admin-level';
 import LSTAdmins from './lst-admins';
 import LSTFees from './lst-fees';
 import LSTMetadata from './lst-metadata';
+import LSTMetrics from './lst-metrics';
 import LSTValidators from './lst-validators';
 
 const LST: FC = () => {
@@ -38,6 +39,7 @@ const LST: FC = () => {
       >
         {lst?.symbol} panel
       </Typography>
+      <LSTMetrics lst={lst?.type} />
       {isSuperAdmin && (
         <>
           <Box gridColumn="1/-1" />

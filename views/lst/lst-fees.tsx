@@ -15,7 +15,7 @@ import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
 import useBlizzardSdk from '@/hooks/use-blizzard-sdk';
 import { useBlizzardStaking } from '@/hooks/use-blizzard-staking';
 import { useLstAdminLevel } from '@/hooks/use-lst-admin-level';
-import { signAndExecute } from '@/utils';
+import { signAndExecute } from '@/utils/tx';
 
 import { LSTMetadataProps } from './lst.types';
 
@@ -143,6 +143,7 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst }) => {
       >
         <TextField
           Prefix="BPS"
+          type="number"
           placeholder="0"
           label="Unstake Fee"
           {...register('burn')}
@@ -167,6 +168,7 @@ const LSTFees: FC<LSTMetadataProps> = ({ lst }) => {
       >
         <TextField
           Prefix="BPS"
+          type="number"
           placeholder="0"
           label="Transmute Fee"
           {...register('transmute')}

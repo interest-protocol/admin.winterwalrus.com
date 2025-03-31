@@ -19,7 +19,7 @@ import { useAccountAdminLevel } from '@/hooks/use-account-admin-level';
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
 import { useLstAdminLevel } from '@/hooks/use-lst-admin-level';
 import useLSTAdmins from '@/hooks/use-lst-admins';
-import { signAndExecute } from '@/utils';
+import { signAndExecute } from '@/utils/tx';
 
 import { LSTAdminsProps } from './lst.types';
 

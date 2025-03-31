@@ -20,7 +20,7 @@ import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
 import useBlizzardSdk from '@/hooks/use-blizzard-sdk';
 import { useBlizzardStaking } from '@/hooks/use-blizzard-staking';
 import { useLstAdminLevel } from '@/hooks/use-lst-admin-level';
-import { signAndExecute } from '@/utils';
+import { signAndExecute } from '@/utils/tx';
 
 import { LSTAdminsProps } from './lst.types';
 
