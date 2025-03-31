@@ -56,15 +56,15 @@ const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
         callback: () => {
           mutate();
           toast.dismiss(toastId);
-          toast.success('Metadata updated successfully!');
+          toast.success('Fees claimed successfully!');
         },
         fallback: (message) => {
           toast.dismiss(toastId);
-          toast.error(message || 'Failed to update metadata');
+          toast.error(message || 'Failed to claim fees');
         },
       });
     } catch (e) {
-      toast.error((e as Error).message || 'Failed to update metadata');
+      toast.error((e as Error).message || 'Failed to claim fees');
     } finally {
       toast.dismiss(toastId);
     }
