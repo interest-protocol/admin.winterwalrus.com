@@ -10,11 +10,13 @@ import {
   normalizeSuiAddress,
   normalizeSuiObjectId,
 } from '@mysten/sui/utils';
+import Link from 'next/link';
 import { toPairs } from 'ramda';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
+import { ExternalSVG } from '@/components/svg';
 import { STAKING_OBJECTS } from '@/constants/objects';
 import useBlizzardAclSdk from '@/hooks/use-blizzard-acl-sdk';
 import useBlizzardSdk from '@/hooks/use-blizzard-sdk';
@@ -167,11 +169,26 @@ const LSTValidators: FC<LSTAdminsProps> = ({ lst }) => {
           gridColumn={['span 4', 'span 4', 'span 6', 'span 4']}
         >
           <TextField
-            label="Object Id"
+            label="Node Id"
             pointerEvents="none"
             value={formatAddress(id)}
             placeholder={formatAddress(normalizeSuiObjectId('0x0'))}
-            supportingText="Id of the admin cap authorized to manage this LST"
+            Prefix={
+              <Link
+                target="_blank"
+                href={`https://walruscan.com/mainnet/operator/${id}`}
+              >
+                <Button
+                  isIcon
+                  py="2xs"
+                  ml="-0.8rem"
+                  variant="tonal"
+                  borderRadius="m"
+                >
+                  <ExternalSVG maxWidth="1rem" maxHeight="1rem" width="100%" />
+                </Button>
+              </Link>
+            }
             Suffix={
               <Button
                 py="2xs"
