@@ -3,6 +3,7 @@ import {
   SuiClientProvider,
   WalletProvider,
 } from '@mysten/dapp-kit';
+import { getFullnodeUrl } from '@mysten/sui/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FC, PropsWithChildren } from 'react';
 
@@ -15,7 +16,7 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => (
       networks={
         createNetworkConfig({
           mainnet: {
-            url: 'https://api.shinami.com/node/v1/sui_mainnet_f8ba2ad72d9ad60899e56d2f9d813e2b',
+            url: process.env.NEXT_PUBLIC_RPC ?? getFullnodeUrl('mainnet'),
           },
         }).networkConfig
       }
