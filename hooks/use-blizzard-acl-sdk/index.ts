@@ -9,6 +9,7 @@ const useBlizzardAclSdk = (lst?: string) =>
 
     return new BlizzardAclSDK({
       acl: ACL_OBJECTS[lst]({ mutable: true }).objectId,
+      fullNodeUrl: process.env.NEXT_PUBLIC_RPC!,
     });
   });
 

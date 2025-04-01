@@ -1,5 +1,6 @@
 import { BlizzardAclSDK } from '@interest-protocol/blizzard-sdk';
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit';
+import { getFullnodeUrl } from '@mysten/sui/client';
 import { toPairs, values } from 'ramda';
 import useSWR from 'swr';
 
@@ -78,6 +79,8 @@ export const useAccountAdminLevel = () => {
         validityLstsLevel[lstLevel.lst] = await Promise.all(
           toPairs(lstLevel.access).map(async ([id, level]) => {
             const aclSdk = new BlizzardAclSDK({
+              fullNodeUrl:
+                process.env.NEXT_PUBLIC_RPC ?? getFullnodeUrl('mainnet'),
               acl: ACL_OBJECTS[lstLevel.lst]({ mutable: true }).objectId,
             });
 
