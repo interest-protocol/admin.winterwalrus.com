@@ -44,11 +44,14 @@ const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
         admin: adminCap,
       });
 
-      blizzardSdk.claimFees({
+      const { returnValues: fees } = await blizzardSdk.claimFees({
         tx,
         adminWitness: returnValues,
         blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
       });
+
+      tx.transferObjects(fees, currentAccount.address);
+
       await signAndExecute({
         tx,
         client,
