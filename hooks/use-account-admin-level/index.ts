@@ -1,5 +1,5 @@
 import { BlizzardAclSDK } from '@interest-protocol/blizzard-sdk';
-import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit';
+import { useSuiClient } from '@mysten/dapp-kit';
 import { getFullnodeUrl } from '@mysten/sui/client';
 import { toPairs, values } from 'ramda';
 import useSWR from 'swr';
@@ -21,7 +21,10 @@ interface AdminLevel extends Omit<RawAdminLevel, 'lst'> {
 
 export const useAccountAdminLevel = () => {
   const client = useSuiClient();
-  const currentAccount = useCurrentAccount();
+  const currentAccount = {
+    address:
+      '0xfd1857b0672adaa2a0d037cf104177a5976e8a4af948c64c34fcc0ed34be0044',
+  };
 
   return useSWR<ReadonlyArray<AdminLevel> | null>(
     [useAccountAdminLevel.name, currentAccount?.address],

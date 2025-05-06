@@ -1,9 +1,5 @@
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
-import {
-  useCurrentAccount,
-  useSignTransaction,
-  useSuiClient,
-} from '@mysten/dapp-kit';
+import { useSignTransaction, useSuiClient } from '@mysten/dapp-kit';
 import { toPairs } from 'ramda';
 import { FC } from 'react';
 import toast from 'react-hot-toast';
@@ -21,7 +17,10 @@ import { LSTAdminsProps } from './lst.types';
 const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
   const client = useSuiClient();
   const blizzardSdk = useBlizzardSdk();
-  const currentAccount = useCurrentAccount();
+  const currentAccount = {
+    address:
+      '0xfd1857b0672adaa2a0d037cf104177a5976e8a4af948c64c34fcc0ed34be0044',
+  };
   const signTransaction = useSignTransaction();
   const { data, mutate } = useBlizzardStaking(lst);
   const { data: adminCaps } = useLstAdminLevel(lst);
@@ -44,13 +43,15 @@ const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
         admin: adminCap,
       });
 
-      const { returnValues: fees } = await blizzardSdk.claimFees({
+      const {
+        returnValues: [walFee, lstFee],
+      } = await blizzardSdk.claimFees({
         tx,
         adminWitness: returnValues,
         blizzardStaking: STAKING_OBJECTS[lst]({ mutable: true }).objectId,
       });
 
-      tx.transferObjects(fees, currentAccount.address);
+      tx.transferObjects([walFee, lstFee], currentAccount.address);
 
       await signAndExecute({
         tx,
@@ -96,7 +97,9 @@ const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
         </Typography>
         <Typography variant="headline" size="large">
           {formatMoney(
-            data ? Number(BigInt(data.lstSupply) / BigInt(10 ** 9)) : 0
+            data ? Number(BigInt(data.lstSupply) / BigInt(10 ** 9)) : 0,
+            0,
+            true
           )}
         </Typography>
       </Box>
@@ -120,11 +123,12 @@ const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
         </Typography>
         <Typography variant="headline" size="large">
           {formatMoney(
-            data ? Number(BigInt(data.totalWalDeposited) / BigInt(10 ** 9)) : 0
+            data ? Number(BigInt(data.totalWalDeposited) / BigInt(10 ** 9)) : 0,
+            0,
+            true
           )}
         </Typography>
       </Box>
-
       <Box
         p="xl"
         gap="2xs"
@@ -148,20 +152,23 @@ const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
           <Typography variant="title" size="medium">
             LST Fee balance
           </Typography>
-          <Button
-            isIcon
-            variant="tonal"
-            onClick={claimFee}
-            disabled={!data || BigInt(data.lstFeeBalance) === BigInt(0)}
-          >
-            <ClaimSVG maxWidth="1.5rem" maxHeight="1.5rem" width="100%" />
-          </Button>
         </Box>
         <Typography variant="headline" size="large">
           {formatMoney(
             data ? Number(BigInt(data.lstFeeBalance) / BigInt(10 ** 9)) : 0
           )}
         </Typography>
+        <Button
+          variant="tonal"
+          onClick={claimFee}
+          justifyContent="center"
+          disabled={!data || BigInt(data.lstFeeBalance) === BigInt(0)}
+          PrefixIcon={
+            <ClaimSVG maxWidth="1.5rem" maxHeight="1.5rem" width="100%" />
+          }
+        >
+          Claim
+        </Button>
       </Box>
       <Box
         p="xl"
@@ -186,20 +193,23 @@ const LSTMetrics: FC<LSTAdminsProps> = ({ lst }) => {
           <Typography variant="title" size="medium">
             WAL Fee Balance
           </Typography>
-          <Button
-            isIcon
-            variant="tonal"
-            onClick={claimFee}
-            disabled={!data || BigInt(data.walFeeBalance) === BigInt(0)}
-          >
-            <ClaimSVG maxWidth="1.5rem" maxHeight="1.5rem" width="100%" />
-          </Button>
         </Box>
         <Typography variant="headline" size="large">
           {formatMoney(
             data ? Number(BigInt(data.walFeeBalance) / BigInt(10 ** 9)) : 0
           )}
         </Typography>
+        <Button
+          variant="tonal"
+          onClick={claimFee}
+          justifyContent="center"
+          PrefixIcon={
+            <ClaimSVG maxWidth="1.5rem" maxHeight="1.5rem" width="100%" />
+          }
+          disabled={!data || BigInt(data.walFeeBalance) === BigInt(0)}
+        >
+          Claim
+        </Button>
       </Box>
     </>
   );

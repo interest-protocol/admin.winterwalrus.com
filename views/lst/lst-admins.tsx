@@ -1,9 +1,5 @@
 import { Box, Button, TextField, Typography } from '@interest-protocol/ui-kit';
-import {
-  useCurrentAccount,
-  useSignTransaction,
-  useSuiClient,
-} from '@mysten/dapp-kit';
+import { useSignTransaction, useSuiClient } from '@mysten/dapp-kit';
 import {
   formatAddress,
   isValidSuiObjectId,
@@ -28,7 +24,10 @@ const LSTAdmins: FC<LSTAdminsProps> = ({ lst }) => {
   const { mutate } = useAccountAdminLevel();
   const { register, getValues } = useForm();
   const { data: admins } = useLSTAdmins(lst);
-  const currentAccount = useCurrentAccount();
+  const currentAccount = {
+    address:
+      '0xfd1857b0672adaa2a0d037cf104177a5976e8a4af948c64c34fcc0ed34be0044',
+  };
   const signTransaction = useSignTransaction();
   const { data: adminLevels } = useLstAdminLevel(lst);
   const { data: blizzardAclSdk } = useBlizzardAclSdk(lst);
