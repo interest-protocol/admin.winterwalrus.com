@@ -1,5 +1,9 @@
 import { Box, Button, TextField, Typography } from '@interest-protocol/ui-kit';
-import { useSignTransaction, useSuiClient } from '@mysten/dapp-kit';
+import {
+  useCurrentAccount,
+  useSignTransaction,
+  useSuiClient,
+} from '@mysten/dapp-kit';
 import { toPairs } from 'ramda';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
@@ -16,10 +20,7 @@ import { LSTMetadataProps } from './lst.types';
 const LSTMetadata: FC<LSTMetadataProps> = ({ lst }) => {
   const client = useSuiClient();
   const blizzardSdk = useBlizzardSdk();
-  const currentAccount = {
-    address:
-      '0xfd1857b0672adaa2a0d037cf104177a5976e8a4af948c64c34fcc0ed34be0044',
-  };
+  const currentAccount = useCurrentAccount();
   const signTransaction = useSignTransaction();
   const { data: adminCaps } = useLstAdminLevel(lst?.type);
   const { data: blizzardAclSdk } = useBlizzardAclSdk(lst?.type);
